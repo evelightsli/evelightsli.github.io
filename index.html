@@ -91,9 +91,9 @@ p{margin:0}
 .nav{display:flex;align-items:center;gap:4px}
 .nav > a,.nav-drop > button{font:500 var(--step--1) var(--body);color:var(--frost);text-decoration:none;padding:10px 12px;border-radius:8px;background:none;border:0;cursor:pointer}
 .nav > a:hover,.nav-drop > button:hover{color:var(--ice)}
-.nav-drop{position:relative}
+.nav-drop{position:relative;z-index:5}
 .nav-drop > button::after{content:"";display:inline-block;width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-3px) rotate(45deg);margin-left:8px}
-.drop-panel{position:absolute;left:0;top:100%;min-width:240px;padding:8px;background:var(--night-2);border:1px solid var(--night-3);border-radius:12px;box-shadow:0 18px 40px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(4px);transition:opacity .15s,transform .15s,visibility .15s}
+.drop-panel{position:absolute;z-index:5;left:0;top:100%;min-width:240px;padding:8px;background:var(--night-2);border:1px solid var(--night-3);border-radius:12px;box-shadow:0 18px 40px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(4px);transition:opacity .15s,transform .15s,visibility .15s}
 .nav-drop:hover .drop-panel,.nav-drop:focus-within .drop-panel{opacity:1;visibility:visible;transform:none}
 .drop-panel a{display:block;padding:10px 12px;border-radius:8px;text-decoration:none;font-size:var(--step--1)}
 .drop-panel a:hover{background:var(--night-3);color:var(--ice)}
@@ -109,12 +109,11 @@ p{margin:0}
 @media (max-width:420px){.brand-sub{display:none}}
 @media (max-width:960px){.nav{display:none}.menu-btn{display:block}.header-cta .btn{padding:.7em 1.1em;font-size:var(--step--1);min-height:44px}}
 @media (min-width:961px){.mobile-nav{display:none!important}}
-.garland{position:relative;height:26px;margin-bottom:-26px;pointer-events:none}
+.garland{position:relative;z-index:1;height:24px;pointer-events:none;overflow:visible}
 .garland svg{position:absolute;left:0;top:0;width:100%;height:26px;overflow:visible}
-.c9{position:absolute;top:0;width:10px;height:15px;margin-left:-5px;border-radius:50% 50% 45% 45%/60% 60% 40% 40%;pointer-events:auto;transform-origin:50% -4px;transition:transform .3s}
+.c9{position:absolute;top:0;width:10px;height:15px;margin-left:-5px;border-radius:50% 50% 45% 45%/60% 60% 40% 40%;pointer-events:none;transform-origin:50% -4px;transition:transform .3s}
 .c9::before{content:"";position:absolute;left:2px;top:-4px;width:6px;height:5px;background:#3b4a3f;border-radius:1px}
 .c9{background:var(--c);box-shadow:0 0 10px 2px var(--c);animation:tw 3s ease-in-out infinite;animation-delay:var(--d)}
-.c9:hover{transform:rotate(14deg) scale(1.25);filter:brightness(1.4)}
 @keyframes tw{0%,100%{opacity:1}50%{opacity:.55}}
 @media (prefers-reduced-motion:reduce){.c9{animation:none}}
 
@@ -763,9 +762,9 @@ fieldset{border:0;padding:0;margin:0 0 18px}
   function buildGarland(){
     var w=gar.clientWidth,gap=w<600?38:48,n=Math.floor(w/gap),cols=["#ff4b5c","#3ee08f","#ffc44d","#5b9dff","#fff1d6"];
     var path="M0 2";var html="";
-    for(var i=0;i<=n;i++){var x=i*gap;if(i>0){path+=" Q"+(x-gap/2)+" 14 "+x+" 2";}}
+    for(var i=0;i<=n;i++){var x=i*gap;if(i>0){path+=" Q"+(x-gap/2)+" 12 "+x+" 2";}}
     html+='<svg viewBox="0 0 '+w+' 26" preserveAspectRatio="none"><path d="'+path+'" stroke="#2c3b33" stroke-width="1.6" fill="none"/></svg>';
-    for(var j=0;j<n;j++){var bx=j*gap+gap/2;html+='<span class="c9" style="left:'+bx+'px;top:8px;--c:'+cols[j%cols.length]+';--d:'+(-Math.random()*3).toFixed(2)+'s"></span>';}
+    for(var j=0;j<n;j++){var bx=j*gap+gap/2;html+='<span class="c9" style="left:'+bx+'px;top:6px;--c:'+cols[j%cols.length]+';--d:'+(-Math.random()*3).toFixed(2)+'s"></span>';}
     gar.innerHTML=html;
   }
   buildGarland();var gt;window.addEventListener("resize",function(){clearTimeout(gt);gt=setTimeout(buildGarland,200);});
