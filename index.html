@@ -335,7 +335,7 @@ fieldset{border:0;padding:0;margin:0 0 18px}
 .snow-toggle svg{width:16px;height:16px;stroke:var(--ice);fill:none;stroke-width:1.6}
 .snow-toggle[aria-pressed="false"]{opacity:.7}
 .sleigh{position:fixed;left:0;top:0;z-index:46;width:240px;height:64px;pointer-events:auto;cursor:pointer;background:none;border:0;padding:0;opacity:0;will-change:transform}
-.sleigh svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 0 8px rgba(247,220,160,.55))}
+.sleigh svg{width:100%;height:100%;overflow:visible;transform:scaleX(-1);filter:drop-shadow(0 0 8px rgba(247,220,160,.55))}
 .dust{position:fixed;z-index:45;width:4px;height:4px;border-radius:50%;background:var(--gold-soft);box-shadow:0 0 8px 2px rgba(247,220,160,.8);pointer-events:none;animation:dust 1.4s ease-out forwards}
 @keyframes dust{to{opacity:0;transform:translateY(14px) scale(.3)}}
 .toast{position:fixed;left:50%;top:calc(96px + env(safe-area-inset-top,0px));z-index:70;transform:translate(-50%,-10px);opacity:0;padding:12px 18px;border-radius:999px;background:var(--berry);color:#fff;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.4);transition:opacity .3s,transform .3s;pointer-events:none;max-width:calc(100% - 32px);text-align:center}
@@ -437,8 +437,8 @@ fieldset{border:0;padding:0;margin:0 0 18px}
         <div class="designer" aria-label="Design your display">
           <div class="designer-row" role="group" aria-label="Lighting designs">
             <span class="designer-label">Designs</span>
-            <button type="button" class="swatch" data-design="estate" aria-pressed="true"><i style="--sw:conic-gradient(#ffd59a 0 33%,#ff2d3d 0 66%,#2fe07f 0)"></i>Grand Estate</button>
-            <button type="button" class="swatch" data-design="classic" aria-pressed="false"><i style="--sw:radial-gradient(circle,#ffe7b8,#f0b75c)"></i>Classic Elegance</button>
+            <button type="button" class="swatch" data-design="estate" aria-pressed="true"><i style="--sw:conic-gradient(#ffb65a 0 33%,#ff2d3d 0 66%,#2fe07f 0)"></i>Grand Estate</button>
+            <button type="button" class="swatch" data-design="classic" aria-pressed="false"><i style="--sw:radial-gradient(circle,#ffd391,#e8a245)"></i>Classic Elegance</button>
             <button type="button" class="swatch" data-design="icicle" aria-pressed="false"><i style="--sw:linear-gradient(180deg,#ffffff,#8fd2ff)"></i>Icicle Cascade</button>
             <button type="button" class="swatch" data-design="candy" aria-pressed="false"><i style="--sw:conic-gradient(#ff2d3d 0 25%,#fff3ea 0 50%,#ff2d3d 0 75%,#fff3ea 0)"></i>Candy Cane Lane</button>
             <button type="button" class="swatch" data-design="multi" aria-pressed="false"><i style="--sw:conic-gradient(#ff3b4a 0 25%,#2fd97c 0 50%,#3d82ff 0 75%,#ffb52e 0)"></i>Old-Fashioned Multicolor</button>
@@ -606,7 +606,7 @@ fieldset{border:0;padding:0;margin:0 0 18px}
       <div class="faq">
         <details><summary>What happens if a bulb goes out?</summary><p>Call or text us. We'll have it fixed within 48 hours, often the same day. Maintenance is included for the whole season at no extra cost.</p></details>
         <details><summary>Is the price really all-inclusive?</summary><p>Yes. Your quote covers design, installation, season-long maintenance, removal and off-season storage. There are no surprise fees later.</p></details>
-        <details><summary>Do I own the lights?</summary><p>Your season price covers the lights along with everything we do with them. We label and store your display between seasons, so it's ready to go back up next year. Ask us about the details when we quote.</p></details>
+        <details><summary>Do I own the lights?</summary><p>In most cases, we lease the lights to the customer to keep the price all-inclusive. This means any repair or replacement is our cost, not yours, making the service completely hassle-free.</p></details>
         <details><summary>When do you take the lights down?</summary><p>After the holidays, on a date we schedule with you, usually in January. You don't have to call to remind us.</p></details>
         <details><summary>Will installation damage my roof or gutters?</summary><p>No. We use custom clips and mounts made in our shop, with no nails, staples or screws. When the lights come down, there's nothing to patch.</p></details>
         <details><summary>When should I book?</summary><p>As early as you can. Install dates fill up as the season gets closer, and early booking gives you the widest choice.</p></details>
@@ -817,7 +817,7 @@ fieldset{border:0;padding:0;margin:0 0 18px}
     function step(ts){if(t0===null)t0=ts;var p=(ts-t0)/dur;if(p>1){sleigh.style.opacity=0;sleigh.hidden=true;schedule();return;}
       var x=-w-40+(vw+w*2+80)*p,y=y0-Math.sin(p*Math.PI)*60+Math.sin(p*20)*4,rot=-4+Math.cos(p*Math.PI)*-3;
       sleigh.style.opacity=p<.05?p*20:(p>.95?(1-p)*20:1);sleigh.style.transform="translate("+x+"px,"+y+"px) rotate("+rot+"deg)";
-      if(ts-lastDust>55){lastDust=ts;var d=document.createElement("span");d.className="dust";d.style.left=(x+w*0.88)+"px";d.style.top=(y+w*0.17)+"px";document.body.appendChild(d);setTimeout(function(){d.remove();},1500);}
+      if(ts-lastDust>55){lastDust=ts;var d=document.createElement("span");d.className="dust";d.style.left=(x+w*0.1)+"px";d.style.top=(y+w*0.19)+"px";document.body.appendChild(d);setTimeout(function(){d.remove();},1500);}
       requestAnimationFrame(step);}
     requestAnimationFrame(step);
   }
@@ -848,12 +848,12 @@ fieldset{border:0;padding:0;margin:0 0 18px}
     orns.appendChild(o);});
 
   /* ---------- 3D house with live lighting designs ---------- */
-  var WW=0xffd59a,CW=0xeaf4ff,ICE=0x9fd8ff,RED=0xff2d3d,WH=0xfff3ea,GRN=0x2fe07f,GOLD=0xffcf5a,MULTI=[0xff3b4a,0x2fd97c,0x3d82ff,0xffb52e];
+  var WW=0xffb65a,CW=0xeaf4ff,ICE=0x9fd8ff,RED=0xff2d3d,WH=0xfff3ea,GRN=0x2fe07f,GOLD=0xffcf5a,MULTI=[0xff3b4a,0x2fd97c,0x3d82ff,0xffb52e];
   var LABELS={roof:"C9 roofline bulbs",icicle:"icicle lights",windows:"window outlines",candles:"window candles",trees:"wrapped trees",baubles:"tree ornaments",star:"tree-top star",wreath:"lit wreath",garland:"door garland",bushes:"net lights on hedges",canes:"candy cane path",deer:"light-up reindeer",floods:"color floodlights",path:"walkway stakes"};
   var ORDER=["roof","icicle","windows","candles","trees","baubles","star","wreath","garland","bushes","canes","deer","floods","path"];
   var DESIGNS={
-    estate:{name:"Grand Estate",sw:"conic-gradient(#ffd59a 0 33%,#ff2d3d 0 66%,#2fe07f 0)",g:{roof:[WW],icicle:[WW],windows:[WW],candles:[WW],trees:[RED,GRN],baubles:1,star:[GOLD],wreath:[WW],garland:[WW],bushes:[WW],canes:[RED,WH],deer:[WW],floods:[0xff3348,0x2fe07f],path:[WW]}},
-    classic:{name:"Classic Elegance",sw:"radial-gradient(circle,#ffe7b8,#f0b75c)",g:{roof:[WW],trees:[WW],star:[GOLD],wreath:[WW],garland:[WW],candles:[WW],bushes:[WW],path:[WW]}},
+    estate:{name:"Grand Estate",sw:"conic-gradient(#ffb65a 0 33%,#ff2d3d 0 66%,#2fe07f 0)",g:{roof:[WW],icicle:[WW],windows:[WW],candles:[WW],trees:[RED,GRN],baubles:1,star:[GOLD],wreath:[WW],garland:[WW],bushes:[WW],canes:[RED,WH],deer:[WW],floods:[0xff3348,0x2fe07f],path:[WW]}},
+    classic:{name:"Classic Elegance",sw:"radial-gradient(circle,#ffd391,#e8a245)",g:{roof:[WW],trees:[WW],star:[GOLD],wreath:[WW],garland:[WW],candles:[WW],bushes:[WW],path:[WW]}},
     icicle:{name:"Icicle Cascade",sw:"linear-gradient(180deg,#ffffff,#8fd2ff)",g:{roof:[CW],icicle:[CW,ICE],trees:[CW],bushes:[ICE],floods:[0x5aa8ff,0x5aa8ff],star:[CW],path:[CW]}},
     candy:{name:"Candy Cane Lane",sw:"conic-gradient(#ff2d3d 0 25%,#fff3ea 0 50%,#ff2d3d 0 75%,#fff3ea 0)",g:{roof:[RED,WH],canes:[RED,WH],trees:[RED,WH],windows:[RED],wreath:[RED,WH],garland:[RED,WH],bushes:[RED],star:[GOLD]}},
     multi:{name:"Old-Fashioned Multicolor",sw:"conic-gradient(#ff3b4a 0 25%,#2fd97c 0 50%,#3d82ff 0 75%,#ffb52e 0)",g:{roof:MULTI,trees:MULTI,baubles:1,garland:MULTI,bushes:MULTI,wreath:MULTI,windows:MULTI,star:[GOLD],path:MULTI}},
@@ -1011,7 +1011,7 @@ fieldset{border:0;padding:0;margin:0 0 18px}
         b.lit+=(target-b.lit)*(p==="chase"?0.5:0.22);
         var vis=b.lit>0.01||b.on;b.glow.visible=vis;
         if(vis){b.glow.material.color.copy(b.col);b.glow.material.opacity=0.85*b.lit;
-          if(b.core){b.core.visible=true;b.core.material.color.copy(b.col).lerp(WHITE,0.45*b.lit);b.core.material.opacity=(b.on?0.2:0)+0.8*b.lit;}}
+          if(b.core){b.core.visible=true;b.core.material.color.copy(b.col).lerp(WHITE,(b.col.b<0.5?0.18:0.45)*b.lit);b.core.material.opacity=(b.on?0.2:0)+0.8*b.lit;}}
         else if(b.core)b.core.visible=false;
         if(b.on){tot+=b.lit;cnt++;}}
       var level=cnt?tot/cnt:0;
