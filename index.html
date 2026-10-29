@@ -335,7 +335,7 @@ fieldset{border:0;padding:0;margin:0 0 18px}
 .snow-toggle svg{width:16px;height:16px;stroke:var(--ice);fill:none;stroke-width:1.6}
 .snow-toggle[aria-pressed="false"]{opacity:.7}
 .sleigh{position:fixed;left:0;top:0;z-index:46;width:240px;height:64px;pointer-events:auto;cursor:pointer;background:none;border:0;padding:0;opacity:0;will-change:transform}
-.sleigh svg{width:100%;height:100%;overflow:visible;transform:scaleX(-1);filter:drop-shadow(0 0 8px rgba(247,220,160,.55))}
+.sleigh svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 0 8px rgba(247,220,160,.55))}
 .dust{position:fixed;z-index:45;width:4px;height:4px;border-radius:50%;background:var(--gold-soft);box-shadow:0 0 8px 2px rgba(247,220,160,.8);pointer-events:none;animation:dust 1.4s ease-out forwards}
 @keyframes dust{to{opacity:0;transform:translateY(14px) scale(.3)}}
 .toast{position:fixed;left:50%;top:calc(96px + env(safe-area-inset-top,0px));z-index:70;transform:translate(-50%,-10px);opacity:0;padding:12px 18px;border-radius:999px;background:var(--berry);color:#fff;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.4);transition:opacity .3s,transform .3s;pointer-events:none;max-width:calc(100% - 32px);text-align:center}
@@ -710,8 +710,19 @@ fieldset{border:0;padding:0;margin:0 0 18px}
 <button type="button" class="sleigh" id="sleigh" aria-label="Santa's sleigh. Tap for a surprise." hidden>
   <svg viewBox="0 0 260 70" aria-hidden="true">
     <g fill="#f1f6f9">
-      <!-- reindeer, three in a line -->
-      <g id="deer">
+      <!-- sleigh at the back, front curl facing the direction of travel (right) -->
+      <path d="M4 26h52c6 0 9 4 8 9l-3 10H15c-8 0-12-6-11-12z"/>
+      <path d="M0 52h70c6 0 9-3 10-7" stroke="#f1f6f9" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      <path d="M14 45v7M54 45v7" stroke="#f1f6f9" stroke-width="2"/>
+      <!-- gift sack behind Santa -->
+      <path d="M6 26c0-6 4-10 9-10 5 0 7 4 7 10z"/>
+      <!-- Santa facing forward -->
+      <path d="M24 26c0-8 4-13 10-13s10 5 10 13z"/><circle cx="34" cy="12" r="5"/>
+      <path d="M38 8L28 1l-4 3 6 5z"/><circle cx="23" cy="3" r="2.2"/>
+      <!-- reins from sleigh to the team -->
+      <path d="M44 22C80 24 150 24 222 21" stroke="#e8b85b" stroke-width="1" fill="none"/>
+      <!-- reindeer team up front, all facing the direction of travel -->
+      <g id="deer" transform="translate(96 0)">
         <ellipse cx="14" cy="34" rx="11" ry="5.5"/>
         <path d="M23 31l7-7 3 1-6 9z"/><circle cx="32" cy="23" r="3.6"/><path d="M34 22l5 1-4 2z"/>
         <path d="M31 20l-2-7M29 15l-3-2M30 17l3-4M33 20l2-6M34 16l3-2" stroke="#f1f6f9" stroke-width="1.4" fill="none" stroke-linecap="round"/>
@@ -719,19 +730,9 @@ fieldset{border:0;padding:0;margin:0 0 18px}
       </g>
       <use href="#deer" x="46" y="-3"/>
       <use href="#deer" x="92" y="-6"/>
-      <!-- reins -->
-      <path d="M128 24C110 26 70 30 30 30" stroke="#e8b85b" stroke-width="1" fill="none"/>
-      <!-- sleigh -->
-      <path d="M150 26h52c6 0 9 4 8 9l-3 10h-46c-8 0-12-6-11-12z"/>
-      <path d="M146 52h70c6 0 9-3 10-7" stroke="#f1f6f9" stroke-width="2.4" fill="none" stroke-linecap="round"/>
-      <path d="M160 45v7M200 45v7" stroke="#f1f6f9" stroke-width="2"/>
-      <!-- Santa -->
-      <path d="M170 26c0-8 4-13 10-13s10 5 10 13z"/><circle cx="180" cy="12" r="5"/>
-      <path d="M176 8l10-7 4 3-6 5z"/><circle cx="191" cy="3" r="2.2"/>
-      <!-- gift sack -->
-      <path d="M194 24c0-6 4-10 9-10 5 0 7 4 7 10z"/>
     </g>
-    <g fill="#ff4b5c"><circle cx="160" cy="35" r="1.6"/><circle cx="172" cy="35" r="1.6"/><circle cx="184" cy="35" r="1.6"/><circle cx="196" cy="35" r="1.6"/></g>
+    <g fill="#ff4b5c"><circle cx="14" cy="35" r="1.6"/><circle cx="26" cy="35" r="1.6"/><circle cx="38" cy="35" r="1.6"/><circle cx="50" cy="35" r="1.6"/></g>
+    <circle cx="228" cy="17" r="1.7" fill="#ff4b5c"/>
   </svg>
 </button>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -817,7 +818,7 @@ fieldset{border:0;padding:0;margin:0 0 18px}
     function step(ts){if(t0===null)t0=ts;var p=(ts-t0)/dur;if(p>1){sleigh.style.opacity=0;sleigh.hidden=true;schedule();return;}
       var x=-w-40+(vw+w*2+80)*p,y=y0-Math.sin(p*Math.PI)*60+Math.sin(p*20)*4,rot=-4+Math.cos(p*Math.PI)*-3;
       sleigh.style.opacity=p<.05?p*20:(p>.95?(1-p)*20:1);sleigh.style.transform="translate("+x+"px,"+y+"px) rotate("+rot+"deg)";
-      if(ts-lastDust>55){lastDust=ts;var d=document.createElement("span");d.className="dust";d.style.left=(x+w*0.1)+"px";d.style.top=(y+w*0.19)+"px";document.body.appendChild(d);setTimeout(function(){d.remove();},1500);}
+      if(ts-lastDust>55){lastDust=ts;var d=document.createElement("span");d.className="dust";d.style.left=(x+w*0.03)+"px";d.style.top=(y+w*0.19)+"px";document.body.appendChild(d);setTimeout(function(){d.remove();},1500);}
       requestAnimationFrame(step);}
     requestAnimationFrame(step);
   }
