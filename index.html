@@ -203,6 +203,17 @@ p{margin:0}
 @media (max-width:860px){.countdown .wrap{grid-template-columns:1fr}.ornaments .orn:nth-child(n+4){display:none}}
 @media (max-width:420px){.tiles{gap:8px}.tile{padding:14px 4px 10px}}
 
+/* Christmas Eve: live NORAD tracker */
+.countdown .santa{display:block;position:relative;z-index:1;margin-top:clamp(40px,6vw,64px)}
+.santa-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:16px;margin-bottom:18px}
+.santa-title{font-family:var(--display);font-weight:500;font-size:var(--step-2);line-height:1.1}
+.santa-sub{color:#cfe3d8;margin-top:10px;max-width:52ch}
+.santa-frame{position:relative;aspect-ratio:16/10;border-radius:18px;overflow:hidden;border:1px solid rgba(241,246,249,.2);background:#06140f;box-shadow:0 24px 60px rgba(0,0,0,.35)}
+.santa-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.santa-note{margin-top:12px;font-size:.8rem;color:#cfe3d8}
+.santa-note a{color:#fff}
+@media (max-width:640px){.santa-frame{aspect-ratio:auto;height:72vh;height:72svh}}
+
 /* Process */
 .section-head{display:grid;gap:16px;margin-bottom:clamp(36px,5vw,60px)}
 .process{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));counter-reset:step}
@@ -560,6 +571,18 @@ fieldset{border:0;padding:0;margin:0 0 18px}
         <div class="tile"><b id="cd-m">00</b><span>Minutes</span></div>
         <div class="tile"><b id="cd-s">00</b><span>Seconds</span></div>
       </div>
+    </div>
+    <div class="wrap santa" id="santa" hidden>
+      <div class="santa-head">
+        <div>
+          <p class="eyebrow" style="color:#f7dca0">Live on Christmas Eve</p>
+          <h3 class="santa-title">Where is Santa right now?</h3>
+          <p class="santa-sub">The official NORAD Tracks Santa map, live. Follow his sleigh around the world tonight.</p>
+        </div>
+        <a class="btn btn-line" href="https://www.noradsanta.org/en/map" target="_blank" rel="noopener">Open full screen</a>
+      </div>
+      <div class="santa-frame" id="santa-frame"></div>
+      <p class="santa-note">Tracker provided by <a href="https://www.noradsanta.org/" target="_blank" rel="noopener">NORAD Tracks Santa</a>. Eve Lights is not affiliated with NORAD. If the map doesn't load, <a href="https://www.noradsanta.org/en/map" target="_blank" rel="noopener">open it on noradsanta.org</a>.</p>
     </div>
   </section>
 
@@ -987,6 +1010,17 @@ fieldset{border:0;padding:0;margin:0 0 18px}
     for(var k in v){var t=k==="d"?String(v[k]):pad(v[k]);if(last[k]!==t){cd[k].textContent=t;if(!REDUCE){cd[k].classList.remove("tick");void cd[k].offsetWidth;cd[k].classList.add("tick");}last[k]=t;}}
   }
   tickCd();setInterval(tickCd,1000);
+  /* Christmas Eve and Christmas Day (visitor's local time): show NORAD's official live tracker.
+     Add ?santa=1 to the URL to preview it on any day. */
+  (function(){var n=new Date(),eve=n.getMonth()===11&&(n.getDate()===24||n.getDate()===25),preview=/[?&]santa=1\b/.test(location.search);
+    if(!eve&&!preview)return;
+    var box=document.getElementById("santa"),fr=document.getElementById("santa-frame");box.hidden=false;
+    if(n.getDate()===24||preview){document.getElementById("cd-title").textContent="Santa is on his way!";
+      document.getElementById("cd-copy").textContent="It's Christmas Eve. Watch Santa's sleigh on the live NORAD map below, and when you're ready to plan next year's display, we're here.";}
+    var f=document.createElement("iframe");f.src="https://www.noradsanta.org/en/map";f.title="Live NORAD Tracks Santa map";f.loading="lazy";
+    f.setAttribute("allow","fullscreen");f.setAttribute("referrerpolicy","strict-origin-when-cross-origin");
+    f.setAttribute("sandbox","allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox");
+    fr.appendChild(f);})();
   /* Out of season (January to August) the urgency copy would be untrue, so say something accurate instead. */
   (function(){var n=new Date(),m=n.getMonth();if(m<8||(m===11&&n.getDate()>25)){document.getElementById("cd-title").textContent="Next Christmas is closer than it looks.";
     document.getElementById("cd-copy").textContent="Planning ahead pays off. Book early for the widest choice of install dates, and your display is designed and ready before the season starts.";}})();
