@@ -329,6 +329,8 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--ice);box
 input[aria-invalid=true],textarea[aria-invalid=true]{border-color:#ef8e7e}
 .err{color:#f4a596;font-size:var(--step--1)}
 .err a{color:#fff}
+.addr-row{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:0 12px}
+@media (max-width:360px){.addr-row{grid-template-columns:1fr}}
 fieldset{border:0;padding:0;margin:0 0 18px}
 .choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:8px}
 .choice input{position:absolute;opacity:0;pointer-events:none}
@@ -734,9 +736,21 @@ fieldset{border:0;padding:0;margin:0 0 18px}
               </div>
             </fieldset>
             <div class="field">
-              <label for="f-address">Service address</label>
-              <input type="text" id="f-address" name="service_address" autocomplete="street-address" placeholder="123 Main St, Garden City" required aria-describedby="e-address" maxlength="200">
-              <span class="err" id="e-address" hidden>Enter the address where you'd like lights installed.</span>
+              <label for="f-address">Street address</label>
+              <input type="text" id="f-address" name="service_street" autocomplete="address-line1" placeholder="123 Main St" required aria-describedby="e-address" maxlength="150">
+              <span class="err" id="e-address" hidden>Enter the street address where you'd like lights installed.</span>
+            </div>
+            <div class="addr-row">
+            <div class="field">
+              <label for="f-town">Town</label>
+              <input type="text" id="f-town" name="service_town" autocomplete="address-level2" placeholder="Garden City" required aria-describedby="e-town" maxlength="80">
+              <span class="err" id="e-town" hidden>Enter the town.</span>
+            </div>
+            <div class="field">
+              <label for="f-zip">ZIP code</label>
+              <input type="text" id="f-zip" name="service_zip" autocomplete="postal-code" inputmode="numeric" placeholder="11530" required aria-describedby="e-zip" maxlength="10">
+              <span class="err" id="e-zip" hidden>Enter a 5-digit ZIP code.</span>
+            </div>
             </div>
             <div class="field">
               <label for="f-type">Seasonal or permanent? <span class="hint">(optional)</span></label>
@@ -1190,12 +1204,17 @@ fieldset{border:0;padding:0;margin:0 0 18px}
   var form=document.getElementById("quote-form"),s1=document.getElementById("step1"),s2=document.getElementById("step2"),bar2=document.getElementById("bar2"),
       btn=document.getElementById("submit"),eSend=document.getElementById("e-send"),sending=false;
   function check(id,eid,okf){var el=document.getElementById(id),er=document.getElementById(eid),good=okf(el.value.trim());el.setAttribute("aria-invalid",good?"false":"true");er.hidden=good;return good;}
+  function addrOK(){
+    var r=[check("f-address","e-address",function(v){return v.length>3&&/\d/.test(v)&&/[a-z]/i.test(v);}),
+           check("f-town","e-town",function(v){return v.length>1;}),
+           check("f-zip","e-zip",function(v){return /^\d{5}(-\d{4})?$/.test(v);})];
+    var bad=r.indexOf(false);if(bad>-1){document.getElementById(["f-address","f-town","f-zip"][bad]).focus();return false;}return true;}
   function toStep2(){
-    if(!check("f-address","e-address",function(v){return v.length>4;})){document.getElementById("f-address").focus();return;}
+    if(!addrOK())return;
     s1.hidden=true;s2.hidden=false;bar2.classList.add("on");document.getElementById("f-name").focus();}
   document.getElementById("to-step2").addEventListener("click",toStep2);
   document.getElementById("back").addEventListener("click",function(){s2.hidden=true;s1.hidden=false;bar2.classList.remove("on");eSend.hidden=true;document.getElementById("f-address").focus();});
-  ["address","name","phone","email"].forEach(function(k){var el=document.getElementById("f-"+k);el.addEventListener("input",function(){if(el.getAttribute("aria-invalid")==="true"){el.setAttribute("aria-invalid","false");document.getElementById("e-"+k).hidden=true;}});});
+  ["address","town","zip","name","phone","email"].forEach(function(k){var el=document.getElementById("f-"+k);el.addEventListener("input",function(){if(el.getAttribute("aria-invalid")==="true"){el.setAttribute("aria-invalid","false");document.getElementById("e-"+k).hidden=true;}});});
   var ph=document.getElementById("f-phone");
   ph.addEventListener("blur",function(){var d=ph.value.replace(/\D/g,"");if(d.length===11&&d.charAt(0)==="1")d=d.slice(1);if(d.length===10)ph.value="("+d.slice(0,3)+") "+d.slice(3,6)+"-"+d.slice(6);});
   form.addEventListener("submit",function(e){e.preventDefault();
@@ -1203,8 +1222,10 @@ fieldset{border:0;padding:0;margin:0 0 18px}
     if(s2.hidden){toStep2();return;}
     var okk=[check("f-name","e-name",function(v){return v.length>1;}),check("f-phone","e-phone",function(v){return v.replace(/\D/g,"").length>=10;}),check("f-email","e-email",function(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);})];
     if(okk.indexOf(false)>-1){document.getElementById(["f-name","f-phone","f-email"][okk.indexOf(false)]).focus();return;}
-    if(!check("f-address","e-address",function(v){return v.length>4;})){s2.hidden=true;s1.hidden=false;bar2.classList.remove("on");document.getElementById("f-address").focus();return;}
+    s2.hidden=true;s1.hidden=false;var aok=addrOK();if(!aok){bar2.classList.remove("on");return;}s1.hidden=true;s2.hidden=false;
     var data={};new FormData(form).forEach(function(v,k){data[k]=typeof v==="string"?v.trim():v;});
+    data.service_address=data.service_street+", "+data.service_town+", NY "+data.service_zip;
+    delete data.service_street;delete data.service_town;delete data.service_zip;
     var bot=!!data._honey||(Date.now()-T0<4000);
     ["chosen_look","budget","vision"].forEach(function(k){if(!data[k])delete data[k];});
     data._subject="New quote request: "+data.name+" ("+data.property_type+")";data._template="table";data._captcha="false";
